@@ -16,6 +16,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^29.2.3",
+    "@types/uuid": "^9.0.0",
     "@webpack-cli/generators": "^0.1.9",
     "css-loader": "^6.7.1",
     "eslint-config-prettier": "^8.5.0",
@@ -32,6 +33,7 @@
     "workbox-webpack-plugin": "^6.5.4"
   },
   "dependencies": {
-    "eslint-config-airbnb-base": "^15.0.0"
+    "eslint-config-airbnb-base": "^15.0.0",
+    "uuid": "^9.0.0"
   }
 }
