@@ -1,0 +1,12 @@
+.player_gameboard {
+}
+
+body {
+  background-color: purple;
+}
+
+.gameboard_field {
+  background-color: sienna;
+  width: 50px;
+  height: 50px;
+}

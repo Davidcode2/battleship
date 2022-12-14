@@ -3,6 +3,7 @@ import { IShip, Ship } from './ship';
 export interface IGameboard {
   receiveAttack: (x: any, y: any) => void,
   board: [],
+  placeShip: (length: number, x: number, y: number) => boolean,
 }
  
 export const Gameboard = function (size = 4) {
