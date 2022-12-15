@@ -26,11 +26,6 @@ export function markPlacedShips(
   gameboard: IGameboard,
   gameboardElement: Element
 ) {
-  const fieldsWithShips = gameboard.board.filter(
-    (field) => field !== gameboard.EMPTY_FIELD_VALUE
-  );
-  console.log(fieldsWithShips);
-  console.log(gameboard.board.length);
   for (let i = 0; i < gameboard.board.length; i++) {
     for (let j = 0; j < gameboard.board.length; j++) {
       if (gameboard.board[i][j] !== gameboard.EMPTY_FIELD_VALUE) {
