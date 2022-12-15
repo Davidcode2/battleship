@@ -5,6 +5,15 @@ body {
   background-color: purple;
 }
 
+.gameboard {
+  --field-width: 50px;
+  --number-of-fields: 4;
+  display: grid;
+  grid-template-columns: repeat(var(--number-of-fields), var(--field-width));
+  grid-template-rows: repeat(var(--number-of-fields), var(--field-width));
+  gap: 5px;
+}
+
 .gameboard_field {
   background-color: sienna;
   width: 50px;

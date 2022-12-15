@@ -1,6 +1,6 @@
 import { IGameboard, Gameboard } from './gameboard';
 import { ComputerPlayer, HumanPlayer } from './player';
-import { drawGameboard } from './guiDrawer';
+import { createGameboard, placeGameboard } from './guiDrawer';
 
 export class Game {
   playerGameboard: IGameboard;
@@ -9,15 +9,16 @@ export class Game {
   computerPlayer: typeof ComputerPlayer;
 
   setUpGame() {
-    this.playerGameboard = Gameboard();
+    this.playerGameboard = Gameboard(10);
     this.computerGameboard = Gameboard();
     this.player = new (HumanPlayer as any)(this.computerGameboard);
     this.computerPlayer = new (ComputerPlayer as any)(this.playerGameboard);
   }
 
   startGame() {
-    const playerGameboard = document.querySelector('.player_gameboard');
-    drawGameboard(this.playerGameboard, playerGameboard);
+    const playerGameboard = createGameboard(this.playerGameboard);
+    placeGameboard(playerGameboard);
+    
   }
 
   placeShips(gameboard: IGameboard) {
