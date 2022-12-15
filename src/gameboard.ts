@@ -4,6 +4,7 @@ export interface IGameboard {
   receiveAttack: (x: any, y: any) => void,
   board: [],
   placeShip: (length: number, x: number, y: number) => boolean,
+  EMPTY_FIELD_VALUE: any,
 }
  
 export const Gameboard = function (size = 4) {
@@ -11,6 +12,7 @@ export const Gameboard = function (size = 4) {
   const MISS: any = 'water';
 
   return {
+    EMPTY_FIELD_VALUE,
     board: (function (size: any): any {
       let board = [];
       for (let i = 0; i < size; i++) {
@@ -29,7 +31,7 @@ export const Gameboard = function (size = 4) {
     ships: new Array<IShip>(),
     assignShipToFields: function (ship: any, x: number, y: number) {
       for (let i = 0; i < ship.length; i++) {
-        this.board[i][y] = ship;
+        this.board[x][y+i] = ship;
       }
     },
 
