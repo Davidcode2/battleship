@@ -4,6 +4,7 @@ export function createGameboard(gameboard: IGameboard) {
   const gameboardElement = document.createElement('div');
   gameboardElement.classList.add('gameboard');
   const numberOfFields = gameboard.board.length;
+  // for calculation of field size
   gameboardElement.style.setProperty('--number-of-fields', `${numberOfFields}`);
   for (let i = 0; i < gameboard.board.length; i++) {
     for (let j = 0; j < gameboard.board.length; j++) {
@@ -11,6 +12,10 @@ export function createGameboard(gameboard: IGameboard) {
       fieldElement.classList.add('gameboard_field');
       fieldElement.dataset.x = j.toString();
       fieldElement.dataset.y = i.toString();
+      fieldElement.addEventListener('click', () => {
+        fieldElement.classList.add("hit");
+        gameboard.receiveAttack(i,j);
+      });
       gameboardElement.appendChild(fieldElement);
     }
   }
@@ -36,10 +41,13 @@ export function markPlacedShips(
             (child as any).dataset.x === i.toString() &&
             (child as any).dataset.y === j.toString()
           ) {
-            (child as any).style.backgroundColor = "#282828";
+            (child as any).classList.add("ship");
           }
         }
       }
     }
   }
+}
+
+export function markShotField(x: number, y: number) {
 }

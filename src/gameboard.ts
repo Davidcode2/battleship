@@ -6,7 +6,8 @@ export interface IGameboard {
   placeShipVertical: (length: number, x: number, y: number) => boolean,
   placeShipHorizontal: (length: number, x: number, y: number) => boolean,
   EMPTY_FIELD_VALUE: any,
-  ships: IShip[]
+  ships: IShip[],
+  allShipsSunk: () => boolean;
 }
  
 export const Gameboard = function (size = 4) {

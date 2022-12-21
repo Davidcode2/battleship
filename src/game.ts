@@ -20,10 +20,19 @@ export class Game {
     const computerGameboardElement = createGameboard(this.computerGameboard);
     placeGameboard(playerGameboardElement);
     placeGameboard(computerGameboardElement);
-    this.placeShipsPlayer(this.playerGameboard);
-    this.placeShipsComputer(4, this.computerGameboard);
+    this.placeShips(4, this.playerGameboard);
+    this.placeShips(4, this.computerGameboard);
     markPlacedShips(this.playerGameboard, playerGameboardElement);
     markPlacedShips(this.computerGameboard, computerGameboardElement);
+  }
+
+  checkGameStatus() {
+    if (this.playerGameboard.allShipsSunk()) {
+      console.log("you lost");
+    }
+    if (this.computerGameboard.allShipsSunk()) {
+      console.log("you won");
+    }
   }
 
   makeRandomShipForPlacement(gameboard: IGameboard) {
@@ -40,14 +49,14 @@ export class Game {
     gameboard.placeShipVertical(3, 3, 6);
   }
 
-  placeShipsComputer(numberOfShips: number, gameboard: IGameboard) {
+  placeShips(numberOfShips: number, gameboard: IGameboard) {
     while (gameboard.ships.length < numberOfShips) {
       let placementInfo = this.makeRandomShipForPlacement(gameboard);
       let coinToss = Math.floor(Math.random() * 100) >= 50;
       if (coinToss) {
-        console.log(gameboard.placeShipVertical.apply(gameboard, placementInfo));
+        gameboard.placeShipVertical.apply(gameboard, placementInfo);
       } else {
-        console.log(gameboard.placeShipHorizontal.apply(gameboard, placementInfo));
+        gameboard.placeShipHorizontal.apply(gameboard, placementInfo);
       }
     }
   }
