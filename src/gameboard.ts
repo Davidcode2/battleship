@@ -41,26 +41,43 @@ export const Gameboard = function (size = 4) {
       }
     },
 
-    occupied: function (length: number, x: number, y: number) {
+    occupiedVertical: function (length: number, x: number, y: number) {
       for (let i = 0; i < length; i++) {
-        if (this.board[x][y] !== EMPTY_FIELD_VALUE) {
+        if (this.board[x][y+i] !== EMPTY_FIELD_VALUE) {
           return true;
         }
       }
       return false;
     },
 
-    isOutsideOfBounds: function (length: number, x: number, y: number) {
+    occupiedHorizontal: function (length: number, x: number, y: number) {
+      for (let i = 0; i < length; i++) {
+        if (this.board[x+i][y] !== EMPTY_FIELD_VALUE) {
+          return true;
+        }
+      }
+      return false;
+    },
+
+    isOutsideOfBoundsVertical: function (length: number, x: number, y: number) {
       // check bounds
       const outerBound = this.board.length;
       if (x > outerBound || y > outerBound) return true;
-      //if (x + length > outerBound) return true;
+      if (y + length > outerBound) return true;
+      return false;
+    },
+
+    isOutsideOfBoundsHorizontal: function (length: number, x: number, y: number) {
+      // check bounds
+      const outerBound = this.board.length;
+      if (x > outerBound || y > outerBound) return true;
+      if (x + length > outerBound) return true;
       return false;
     },
 
     placeShipHorizontal: function (length: number, x: number, y: number) {
-      if (this.isOutsideOfBounds(length, x, y)) return false;
-      if (this.occupied(length, x, y)) return false;
+      if (this.isOutsideOfBoundsHorizontal(length, x, y)) return false;
+      if (this.occupiedHorizontal(length, x, y)) return false;
       let ship = Ship(length);
       this.ships.push(ship);
       this.assignShipToFieldsHorizontal(ship, x, y);
@@ -68,8 +85,8 @@ export const Gameboard = function (size = 4) {
     },
 
     placeShipVertical: function (length: number, x: number, y: number) {
-      if (this.isOutsideOfBounds(length, x, y)) return false;
-      if (this.occupied(length, x, y)) return false;
+      if (this.isOutsideOfBoundsVertical(length, x, y)) return false;
+      if (this.occupiedVertical(length, x, y)) return false;
       let ship = Ship(length);
       this.ships.push(ship);
       this.assignShipToFieldsVertical(ship, x, y);
