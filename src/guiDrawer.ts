@@ -36,7 +36,7 @@ export function markPlacedShips(
             (child as any).dataset.x === i.toString() &&
             (child as any).dataset.y === j.toString()
           ) {
-            (child as any).style.backgroundColor = 'blue';
+            (child as any).style.backgroundColor = "#282828";
           }
         }
       }

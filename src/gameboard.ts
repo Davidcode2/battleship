@@ -3,7 +3,8 @@ import { IShip, Ship } from './ship';
 export interface IGameboard {
   receiveAttack: (x: any, y: any) => void,
   board: [],
-  placeShip: (length: number, x: number, y: number) => boolean,
+  placeShipVertical: (length: number, x: number, y: number) => boolean,
+  placeShipHorizontal: (length: number, x: number, y: number) => boolean,
   EMPTY_FIELD_VALUE: any,
 }
  
@@ -29,7 +30,12 @@ export const Gameboard = function (size = 4) {
     missedShots: new Array(),
     successfulShots: new Array(),
     ships: new Array<IShip>(),
-    assignShipToFields: function (ship: any, x: number, y: number) {
+    assignShipToFieldsHorizontal: function (ship: any, x: number, y: number) {
+      for (let i = 0; i < ship.length; i++) {
+        this.board[x+i][y] = ship;
+      }
+    },
+    assignShipToFieldsVertical: function (ship: any, x: number, y: number) {
       for (let i = 0; i < ship.length; i++) {
         this.board[x][y+i] = ship;
       }
@@ -44,11 +50,29 @@ export const Gameboard = function (size = 4) {
       return false;
     },
 
-    placeShip: function (length: number, x: number, y: number) {
+    isOutsideOfBounds: function (length: number, x: number, y: number) {
+      // check bounds
+      const outerBound = this.board.length;
+      if (x > outerBound || y > outerBound) return true;
+      //if (x + length > outerBound) return true;
+      return false;
+    },
+
+    placeShipHorizontal: function (length: number, x: number, y: number) {
+      if (this.isOutsideOfBounds(length, x, y)) return false;
       if (this.occupied(length, x, y)) return false;
       let ship = Ship(length);
       this.ships.push(ship);
-      this.assignShipToFields(ship, x, y);
+      this.assignShipToFieldsHorizontal(ship, x, y);
+      return true;
+    },
+
+    placeShipVertical: function (length: number, x: number, y: number) {
+      if (this.isOutsideOfBounds(length, x, y)) return false;
+      if (this.occupied(length, x, y)) return false;
+      let ship = Ship(length);
+      this.ships.push(ship);
+      this.assignShipToFieldsVertical(ship, x, y);
       return true;
     },
 

@@ -23,10 +23,10 @@ export class Game {
   }
 
   placeShips(gameboard: IGameboard) {
-    gameboard.placeShip(3, 5, 0);
-    gameboard.placeShip(2, 0, 7);
-    gameboard.placeShip(2, 5, 6);
-    gameboard.placeShip(3, 8, 3);
-    gameboard.placeShip(3, 3, 6);
+    gameboard.placeShipVertical(3, 5, 0);
+    gameboard.placeShipHorizontal(2, 0, 7);
+    gameboard.placeShipVertical(2, 5, 6);
+    gameboard.placeShipHorizontal(3, 2, 3);
+    gameboard.placeShipVertical(3, 3, 6);
   }
 }
