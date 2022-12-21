@@ -6,6 +6,7 @@ export interface IGameboard {
   placeShipVertical: (length: number, x: number, y: number) => boolean,
   placeShipHorizontal: (length: number, x: number, y: number) => boolean,
   EMPTY_FIELD_VALUE: any,
+  ships: IShip[]
 }
  
 export const Gameboard = function (size = 4) {
@@ -30,11 +31,13 @@ export const Gameboard = function (size = 4) {
     missedShots: new Array(),
     successfulShots: new Array(),
     ships: new Array<IShip>(),
+
     assignShipToFieldsHorizontal: function (ship: any, x: number, y: number) {
       for (let i = 0; i < ship.length; i++) {
         this.board[x+i][y] = ship;
       }
     },
+
     assignShipToFieldsVertical: function (ship: any, x: number, y: number) {
       for (let i = 0; i < ship.length; i++) {
         this.board[x][y+i] = ship;

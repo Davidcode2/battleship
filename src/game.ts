@@ -10,23 +10,45 @@ export class Game {
 
   setUpGame() {
     this.playerGameboard = Gameboard(10);
-    this.computerGameboard = Gameboard();
+    this.computerGameboard = Gameboard(10);
     this.player = new (HumanPlayer as any)(this.computerGameboard);
     this.computerPlayer = new (ComputerPlayer as any)(this.playerGameboard);
   }
 
   startGame() {
     const playerGameboardElement = createGameboard(this.playerGameboard);
+    const computerGameboardElement = createGameboard(this.computerGameboard);
     placeGameboard(playerGameboardElement);
-    this.placeShips(this.playerGameboard);
+    placeGameboard(computerGameboardElement);
+    this.placeShipsPlayer(this.playerGameboard);
+    this.placeShipsComputer(4, this.computerGameboard);
     markPlacedShips(this.playerGameboard, playerGameboardElement);
+    markPlacedShips(this.computerGameboard, computerGameboardElement);
   }
 
-  placeShips(gameboard: IGameboard) {
+  makeRandomShipForPlacement(gameboard: IGameboard) {
+    let length = Math.floor((Math.random() * 100) % gameboard.board.length);
+    let x = Math.floor((Math.random() * 100) % gameboard.board.length);
+    let y = Math.floor((Math.random() * 100) % gameboard.board.length);
+    return [length, x, y];
+  }
+
+  placeShipsPlayer(gameboard: IGameboard) {
     gameboard.placeShipVertical(3, 5, 0);
     gameboard.placeShipHorizontal(2, 0, 7);
     gameboard.placeShipVertical(2, 5, 6);
-    gameboard.placeShipHorizontal(3, 2, 3);
     gameboard.placeShipVertical(3, 3, 6);
+  }
+
+  placeShipsComputer(numberOfShips: number, gameboard: IGameboard) {
+    while (gameboard.ships.length < numberOfShips) {
+      let placementInfo = this.makeRandomShipForPlacement(gameboard);
+      let coinToss = Math.floor(Math.random() * 100) >= 50;
+      if (coinToss) {
+        console.log(gameboard.placeShipVertical.apply(gameboard, placementInfo));
+      } else {
+        console.log(gameboard.placeShipHorizontal.apply(gameboard, placementInfo));
+      }
+    }
   }
 }
