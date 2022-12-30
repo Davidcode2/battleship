@@ -39,40 +39,19 @@ export class GraphicalGameboard {
   }
 
   togglePlacedShips(gameboard: IGameboard) {
+    const occupiedFieldCoordinates: { x: number; y: number }[] = [];
     for (let i = 0; i < gameboard.board.length; i++) {
       for (let j = 0; j < gameboard.board.length; j++) {
-        if (
-          gameboard.board[i][j] !==
-          gameboard.EMPTY_FIELD_VALUE
-        ) {
-          let children = this.gameboardElement.children;
-          for (let n = 0; n < children.length; n++) {
-            let child = children[n];
-            if (
-              (child as any).dataset.x === i.toString() &&
-              (child as any).dataset.y === j.toString()
-            ) {
-              (child as any).classList.toggle('ship');
-            }
-          }
+        if (gameboard.board[i][j] !== gameboard.EMPTY_FIELD_VALUE) {
+          occupiedFieldCoordinates.push({ x: i, y: j });
         }
       }
     }
+    this.addClassToCoordinates('ship', occupiedFieldCoordinates);
   }
 
   colorShip(coordinates: { x: number; y: number }[]) {
-    coordinates.forEach((element) => {
-      let children = this.gameboardElement.children;
-      for (let n = 0; n < children.length; n++) {
-        let child = children[n];
-        if (
-          (child as any).dataset.x === element.x.toString() &&
-          (child as any).dataset.y === element.y.toString()
-        ) {
-          (child as any).classList.add('sunk');
-        }
-      }
-    });
+    this.addClassToCoordinates('sunk', coordinates);
   }
 
   markShotField(result: string, child: HTMLElement) {
@@ -81,5 +60,20 @@ export class GraphicalGameboard {
     } else {
       child.classList.add('miss');
     }
+  }
+
+  private addClassToCoordinates(className: string, coordinates: {x: number, y: number}[]) {
+    coordinates.forEach((element) => {
+      let children = this.gameboardElement.children;
+      for (let n = 0; n < children.length; n++) {
+        let child = children[n];
+        if (
+          (child as any).dataset.x === element.x.toString() &&
+          (child as any).dataset.y === element.y.toString()
+        ) {
+          (child as any).classList.add(className);
+        }
+      }
+    });
   }
 }

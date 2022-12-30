@@ -63,11 +63,7 @@ export class Game {
 
   addEventListenerToFields(gameboard: GameboardWithGui) {
     const children = gameboard.gameboardGui.gameboardElement.children;
-    for (
-      let i = 0;
-      i < gameboard.gameboardGui.gameboardElement.children.length;
-      i++
-    ) {
+    for (let i = 0; i < children.length; i++) {
       let child: HTMLElement = children[i] as HTMLElement;
       child.addEventListener('click', () => {
         const result = gameboard.gameboard.receiveAttack(
@@ -93,11 +89,12 @@ export class Game {
     for (let i = 0; i < gameboard.gameboard.board.length; i++) {
       for (let j = 0; j < gameboard.gameboard.board.length; j++) {
         let field = gameboard.gameboard.board[i][j];
-        if (field) {
-          let id = gameboard.gameboard.board[i][j]['id'];
-          if (id === shipId) {
-            res.push({ x: i, y: j });
-          }
+        if (!field) {
+          continue;
+        }
+        let id = gameboard.gameboard.board[i][j]['id'];
+        if (id === shipId) {
+          res.push({ x: i, y: j });
         }
       }
     }
