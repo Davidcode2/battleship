@@ -16,9 +16,14 @@ export class Game {
   computerPlayer: typeof ComputerPlayer;
   gameNotFinished = true;
 
-  setUpGame() {
-    this.playerGameboard = Gameboard(10);
-    this.computerGameboard = Gameboard(10);
+  constructor(boardSize: number) {
+    this.setUpGame(boardSize);
+    this.startGame();
+  }
+
+  setUpGame(boardSize: number) {
+    this.playerGameboard = Gameboard(boardSize);
+    this.computerGameboard = Gameboard(boardSize);
     this.player = new (HumanPlayer as any)(this.computerGameboard);
     this.computerPlayer = new (ComputerPlayer as any)(this.playerGameboard);
   }
@@ -32,14 +37,7 @@ export class Game {
     this.placeShips(9, this.playerGameboard);
     this.placeShips(9, this.computerGameboard);
     this.graphicalPlayerGameboard.togglePlacedShips(playerGameboard.gameboard);
-    /*this.graphicalComputerGameboard.togglePlacedShips(
-      computerGameboard.gameboard
-    );
-    */
-    this.startGameLoop();
   }
-
-  startGameLoop() {}
 
   computerTurn() {
     const fullGameboard = Object.create({
