@@ -1,20 +1,17 @@
 import { IGameboard, Gameboard } from './gameboard';
 import { ComputerPlayer, HumanPlayer } from './player';
-import {
-  createGameboard,
-  togglePlacedShips,
-  placeGameboard,
-  colorShip,
-} from './guiDrawer';
+import { GraphicalGameboard } from './guiDrawer';
 
 interface GameboardWithGui {
   gameboard: IGameboard;
-  gameboardGui: Element;
+  gameboardGui: GraphicalGameboard;
 }
 
 export class Game {
   playerGameboard: IGameboard;
   computerGameboard: IGameboard;
+  graphicalPlayerGameboard: GraphicalGameboard;
+  graphicalComputerGameboard: GraphicalGameboard;
   player: typeof HumanPlayer;
   computerPlayer: typeof ComputerPlayer;
 
@@ -27,11 +24,13 @@ export class Game {
 
   startGame() {
     const playerGameboard = this.createGameboard(this.playerGameboard);
+    this.graphicalPlayerGameboard = playerGameboard.gameboardGui;
     const computerGameboard = this.createGameboard(this.computerGameboard);
+    this.graphicalComputerGameboard = computerGameboard.gameboardGui;
     this.placeShips(4, this.playerGameboard);
     this.placeShips(4, this.computerGameboard);
-    togglePlacedShips(playerGameboard);
-    togglePlacedShips(computerGameboard);
+    this.graphicalPlayerGameboard.togglePlacedShips(playerGameboard.gameboard);
+    this.graphicalComputerGameboard.togglePlacedShips(computerGameboard.gameboard);
   }
 
   checkGameStatus() {
@@ -63,8 +62,12 @@ export class Game {
   }
 
   addEventListenerToFields(gameboard: GameboardWithGui) {
-    const children = gameboard.gameboardGui.children;
-    for (let i = 0; i < gameboard.gameboardGui.children.length; i++) {
+    const children = gameboard.gameboardGui.gameboardElement.children;
+    for (
+      let i = 0;
+      i < gameboard.gameboardGui.gameboardElement.children.length;
+      i++
+    ) {
       let child: HTMLElement = children[i] as HTMLElement;
       child.addEventListener('click', () => {
         const result = gameboard.gameboard.receiveAttack(
@@ -77,10 +80,8 @@ export class Game {
               Number(child.dataset.y)
             ]['id'];
           this.colorEntireShip(shipId, gameboard);
-        } else if (result === 'hit') {
-          child.classList.add('hit');
         } else {
-          child.classList.add('miss');
+          gameboard.gameboardGui.markShotField(result, child);
         }
         this.checkGameStatus();
       });
@@ -100,17 +101,17 @@ export class Game {
         }
       }
     }
-    colorShip(gameboard.gameboardGui, res);
+    gameboard.gameboardGui.colorShip(res);
   }
 
   createGameboard(gameboard: IGameboard) {
-    const gameboardElement = createGameboard(gameboard);
+    const gameboardElement = new GraphicalGameboard(gameboard);
     let completeGameboard: GameboardWithGui = Object.create({
       gameboard: gameboard,
       gameboardGui: gameboardElement,
     });
     this.addEventListenerToFields(completeGameboard);
-    placeGameboard(gameboardElement);
+    gameboardElement.placeGameboard();
     return completeGameboard;
   }
 }
