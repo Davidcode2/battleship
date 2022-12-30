@@ -1,7 +1,7 @@
 import { IShip, Ship } from './ship';
 
 export interface IGameboard {
-  receiveAttack: (x: any, y: any) => void,
+  receiveAttack: (x: any, y: any) => string,
   board: [],
   placeShipVertical: (length: number, x: number, y: number) => boolean,
   placeShipHorizontal: (length: number, x: number, y: number) => boolean,
@@ -101,8 +101,13 @@ export const Gameboard = function (size = 4) {
       if (this.board[x][y] !== EMPTY_FIELD_VALUE) {
         this.board[x][y].hit();
         this.successfulShots.push({ x, y });
+        if (this.board[x][y].isSunk()) {
+          return "sunk";
+        }
+        return "hit";
       } else {
         this.missedShots.push({ x, y });
+        return "miss";
       }
     },
 

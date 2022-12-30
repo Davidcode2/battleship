@@ -31,5 +31,13 @@ body {
 }
 
 .hit {
-  background-color: sandybrown;
+  background-color: brown; 
+}
+
+.sunk {
+  background-color: greenyellow; 
+}
+
+.miss {
+  background-color: lightblue;
 }

@@ -1,6 +1,16 @@
 import { IGameboard, Gameboard } from './gameboard';
 import { ComputerPlayer, HumanPlayer } from './player';
-import { createGameboard, markPlacedShips, placeGameboard } from './guiDrawer';
+import {
+  createGameboard,
+  togglePlacedShips,
+  placeGameboard,
+  colorShip,
+} from './guiDrawer';
+
+interface GameboardWithGui {
+  gameboard: IGameboard;
+  gameboardGui: Element;
+}
 
 export class Game {
   playerGameboard: IGameboard;
@@ -16,22 +26,20 @@ export class Game {
   }
 
   startGame() {
-    const playerGameboardElement = createGameboard(this.playerGameboard);
-    const computerGameboardElement = createGameboard(this.computerGameboard);
-    placeGameboard(playerGameboardElement);
-    placeGameboard(computerGameboardElement);
+    const playerGameboard = this.createGameboard(this.playerGameboard);
+    const computerGameboard = this.createGameboard(this.computerGameboard);
     this.placeShips(4, this.playerGameboard);
     this.placeShips(4, this.computerGameboard);
-    markPlacedShips(this.playerGameboard, playerGameboardElement);
-    markPlacedShips(this.computerGameboard, computerGameboardElement);
+    togglePlacedShips(playerGameboard);
+    togglePlacedShips(computerGameboard);
   }
 
   checkGameStatus() {
     if (this.playerGameboard.allShipsSunk()) {
-      console.log("you lost");
+      console.log('you lost');
     }
     if (this.computerGameboard.allShipsSunk()) {
-      console.log("you won");
+      console.log('you won');
     }
   }
 
@@ -40,13 +48,6 @@ export class Game {
     let x = Math.floor((Math.random() * 100) % gameboard.board.length);
     let y = Math.floor((Math.random() * 100) % gameboard.board.length);
     return [length, x, y];
-  }
-
-  placeShipsPlayer(gameboard: IGameboard) {
-    gameboard.placeShipVertical(3, 5, 0);
-    gameboard.placeShipHorizontal(2, 0, 7);
-    gameboard.placeShipVertical(2, 5, 6);
-    gameboard.placeShipVertical(3, 3, 6);
   }
 
   placeShips(numberOfShips: number, gameboard: IGameboard) {
@@ -59,5 +60,57 @@ export class Game {
         gameboard.placeShipHorizontal.apply(gameboard, placementInfo);
       }
     }
+  }
+
+  addEventListenerToFields(gameboard: GameboardWithGui) {
+    const children = gameboard.gameboardGui.children;
+    for (let i = 0; i < gameboard.gameboardGui.children.length; i++) {
+      let child: HTMLElement = children[i] as HTMLElement;
+      child.addEventListener('click', () => {
+        const result = gameboard.gameboard.receiveAttack(
+          child.dataset.x,
+          child.dataset.y
+        );
+        if (result === 'sunk') {
+          const shipId =
+            gameboard.gameboard.board[Number(child.dataset.x)][
+              Number(child.dataset.y)
+            ]['id'];
+          this.colorEntireShip(shipId, gameboard);
+        } else if (result === 'hit') {
+          child.classList.add('hit');
+        } else {
+          child.classList.add('miss');
+        }
+        this.checkGameStatus();
+      });
+    }
+  }
+
+  colorEntireShip(shipId: string, gameboard: GameboardWithGui) {
+    const res: { x: number; y: number }[] = [];
+    for (let i = 0; i < gameboard.gameboard.board.length; i++) {
+      for (let j = 0; j < gameboard.gameboard.board.length; j++) {
+        let field = gameboard.gameboard.board[i][j];
+        if (field) {
+          let id = gameboard.gameboard.board[i][j]['id'];
+          if (id === shipId) {
+            res.push({ x: i, y: j });
+          }
+        }
+      }
+    }
+    colorShip(gameboard.gameboardGui, res);
+  }
+
+  createGameboard(gameboard: IGameboard) {
+    const gameboardElement = createGameboard(gameboard);
+    let completeGameboard: GameboardWithGui = Object.create({
+      gameboard: gameboard,
+      gameboardGui: gameboardElement,
+    });
+    this.addEventListenerToFields(completeGameboard);
+    placeGameboard(gameboardElement);
+    return completeGameboard;
   }
 }
