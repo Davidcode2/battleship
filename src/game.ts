@@ -14,6 +14,7 @@ export class Game {
   graphicalComputerGameboard: GraphicalGameboard;
   player: typeof HumanPlayer;
   computerPlayer: typeof ComputerPlayer;
+  gameNotFinished = true;
 
   setUpGame() {
     this.playerGameboard = Gameboard(10);
@@ -26,19 +27,51 @@ export class Game {
     const playerGameboard = this.createGameboard(this.playerGameboard);
     this.graphicalPlayerGameboard = playerGameboard.gameboardGui;
     const computerGameboard = this.createGameboard(this.computerGameboard);
+    this.addEventListenerToFields(computerGameboard);
     this.graphicalComputerGameboard = computerGameboard.gameboardGui;
-    this.placeShips(4, this.playerGameboard);
-    this.placeShips(4, this.computerGameboard);
+    this.placeShips(9, this.playerGameboard);
+    this.placeShips(9, this.computerGameboard);
     this.graphicalPlayerGameboard.togglePlacedShips(playerGameboard.gameboard);
-    this.graphicalComputerGameboard.togglePlacedShips(computerGameboard.gameboard);
+    /*this.graphicalComputerGameboard.togglePlacedShips(
+      computerGameboard.gameboard
+    );
+    */
+    this.startGameLoop();
+  }
+
+  startGameLoop() {}
+
+  computerTurn() {
+    const fullGameboard = Object.create({
+      gameboard: this.playerGameboard,
+      gameboardGui: this.graphicalPlayerGameboard,
+    });
+    let x = Math.floor(
+      (Math.random() * 100) % this.playerGameboard.board.length
+    );
+    let y = Math.floor(
+      (Math.random() * 100) % this.playerGameboard.board.length
+    );
+    const children = this.graphicalPlayerGameboard.gameboardElement.children;
+    for (let i = 0; i < children.length; i++) {
+      let child = children[i] as HTMLElement;
+      if (
+        child.dataset.x === x.toString() &&
+        child.dataset.y === y.toString()
+      ) {
+        this.applyAttack(child, fullGameboard);
+      }
+    }
   }
 
   checkGameStatus() {
     if (this.playerGameboard.allShipsSunk()) {
       console.log('you lost');
+      this.gameNotFinished = false;
     }
     if (this.computerGameboard.allShipsSunk()) {
       console.log('you won');
+      this.gameNotFinished = false;
     }
   }
 
@@ -61,25 +94,32 @@ export class Game {
     }
   }
 
+  applyAttack(child: HTMLElement, gameboard: GameboardWithGui) {
+    const result = gameboard.gameboard.receiveAttack(
+      child.dataset.x,
+      child.dataset.y
+    );
+    if (result === 'sunk') {
+      const shipId =
+        gameboard.gameboard.board[Number(child.dataset.x)][
+          Number(child.dataset.y)
+        ]['id'];
+      this.colorEntireShip(shipId, gameboard);
+    } else {
+      gameboard.gameboardGui.markShotField(result, child);
+    }
+    this.checkGameStatus();
+  }
+
   addEventListenerToFields(gameboard: GameboardWithGui) {
     const children = gameboard.gameboardGui.gameboardElement.children;
     for (let i = 0; i < children.length; i++) {
       let child: HTMLElement = children[i] as HTMLElement;
       child.addEventListener('click', () => {
-        const result = gameboard.gameboard.receiveAttack(
-          child.dataset.x,
-          child.dataset.y
-        );
-        if (result === 'sunk') {
-          const shipId =
-            gameboard.gameboard.board[Number(child.dataset.x)][
-              Number(child.dataset.y)
-            ]['id'];
-          this.colorEntireShip(shipId, gameboard);
-        } else {
-          gameboard.gameboardGui.markShotField(result, child);
-        }
-        this.checkGameStatus();
+        this.applyAttack(child, gameboard);
+        setTimeout(() => {
+          this.computerTurn();
+        }, 300);
       });
     }
   }
@@ -107,7 +147,6 @@ export class Game {
       gameboard: gameboard,
       gameboardGui: gameboardElement,
     });
-    this.addEventListenerToFields(completeGameboard);
     gameboardElement.placeGameboard();
     return completeGameboard;
   }
