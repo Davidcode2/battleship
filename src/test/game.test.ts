@@ -10,8 +10,8 @@ describe('set up game', () => {
   test('place ships', () => {
     let game = new Game();
     game.setUpGame();
-    game.placeShips(game.playerGameboard);
-    game.placeShips(game.computerGameboard);
+    game.placeShips(5, game.playerGameboard);
+    game.placeShips(5, game.computerGameboard);
   });
 
 });

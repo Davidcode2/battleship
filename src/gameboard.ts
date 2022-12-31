@@ -1,11 +1,13 @@
 import { IShip, Ship } from './ship';
 
 export interface IGameboard {
-  receiveAttack: (x: any, y: any) => void,
+  receiveAttack: (x: any, y: any) => string,
   board: [],
   placeShipVertical: (length: number, x: number, y: number) => boolean,
   placeShipHorizontal: (length: number, x: number, y: number) => boolean,
   EMPTY_FIELD_VALUE: any,
+  ships: IShip[],
+  allShipsSunk: () => boolean;
 }
  
 export const Gameboard = function (size = 4) {
@@ -30,11 +32,13 @@ export const Gameboard = function (size = 4) {
     missedShots: new Array(),
     successfulShots: new Array(),
     ships: new Array<IShip>(),
+
     assignShipToFieldsHorizontal: function (ship: any, x: number, y: number) {
       for (let i = 0; i < ship.length; i++) {
         this.board[x+i][y] = ship;
       }
     },
+
     assignShipToFieldsVertical: function (ship: any, x: number, y: number) {
       for (let i = 0; i < ship.length; i++) {
         this.board[x][y+i] = ship;
@@ -97,8 +101,13 @@ export const Gameboard = function (size = 4) {
       if (this.board[x][y] !== EMPTY_FIELD_VALUE) {
         this.board[x][y].hit();
         this.successfulShots.push({ x, y });
+        if (this.board[x][y].isSunk()) {
+          return "sunk";
+        }
+        return "hit";
       } else {
         this.missedShots.push({ x, y });
+        return "miss";
       }
     },
 
