@@ -14,11 +14,12 @@ export class Game {
   graphicalComputerGameboard: GraphicalGameboard;
   player: typeof HumanPlayer;
   computerPlayer: typeof ComputerPlayer;
-  gameNotFinished = true;
+  gameRunning = true;
 
   constructor(boardSize: number) {
     this.setUpGame(boardSize);
     this.startGame();
+    this.gameRunning = true;
   }
 
   setUpGame(boardSize: number) {
@@ -65,11 +66,9 @@ export class Game {
   checkGameStatus() {
     if (this.playerGameboard.allShipsSunk()) {
       console.log('you lost');
-      this.gameNotFinished = false;
     }
     if (this.computerGameboard.allShipsSunk()) {
       console.log('you won');
-      this.gameNotFinished = false;
     }
   }
 

@@ -41,3 +41,23 @@ body {
 .miss {
   background-color: lightblue;
 }
+
+.textWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 70px;
+}
+
+.cancelCross {
+  display: flex;
+  justify-content: end;
+}
+
+.modal {
+  position: absolute;
+  top: 30%;
+  left: 30%;
+  background-color: white;
+}
