@@ -61,3 +61,13 @@ body {
   left: 30%;
   background-color: white;
 }
+
+.sizeButtonContainer {
+  display: flex;
+  gap: 10px;
+}
+
+.sizeButton {
+  height: var(--sizeSelectBox);
+  background-color: saddlebrown;
+}
