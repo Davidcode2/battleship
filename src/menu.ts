@@ -50,6 +50,7 @@ export class Menu {
     for (let sizeButton of sizeButtons)
       sizeButtonsContainer.appendChild(sizeButton);
     const modalObject = this.makeModal(sizeButtonsContainer);
+    modalObject.confirmationButton.remove();
     document.body.appendChild(modalObject.modal);
   }
 
@@ -107,6 +108,7 @@ export class Menu {
     modal.classList.add('modal');
     wrapper.classList.add('textWrapper');
     confirmationButton.textContent = 'Confirm';
+    confirmationButton.classList.add("menu-button");
     cancelButton.textContent = 'X';
     cancelCrossWrapper.appendChild(cancelButton);
     modal.appendChild(cancelCrossWrapper);
