@@ -4,16 +4,14 @@ export class Menu {
   // TODO: need to pass parameter for size
   private startGameFunction;
 
-  private gameboardSize;
+  private gameboardSize: number;
 
   constructor(
     gameRunning: boolean,
     startGameFunction: Function,
-    gameboardSize: number
   ) {
     this.gameRunning = gameRunning;
     this.startGameFunction = startGameFunction;
-    this.gameboardSize = gameboardSize;
     this.makeNewGameButton();
     this.makeReplayButton();
     this.makeNewRandomGameButton();
@@ -40,7 +38,7 @@ export class Menu {
 
   conditionalStartGame() {
     if (!this.gameRunning) {
-      this.startGameFunction();
+      this.startGameFunction(this.gameboardSize);
       this.gameRunning = true;
     }
   }
